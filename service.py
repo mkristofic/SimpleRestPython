@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 import mysql.connector
 
 mydb = mysql.connector.connect(
@@ -56,14 +56,17 @@ class Shippers(Resource):
 		result = {'shippers': [{'ShipperID': id, 'CompanyName': company, 'Phone': phone} for (id, company, phone) in mycursor.fetchall()]}
 		return result
 
-class ShippersSimilarName(Resource):
-	def get(self, name):
-		mycursor.execute("select * from shippers where LOWER(CompanyName) like '%{}%'".format(name.lower()))
+class ShippersFilter(Resource):
+	def get(self, filter):
+		mycursor.execute("select * from shippers where LOWER(CompanyName) like '%{}%'".format(filter.lower()))
 		result = {'shippers': [{'ShipperID': id, 'CompanyName': company, 'Phone': phone} for (id, company, phone) in mycursor.fetchall()]}
 		return result
 
+api.add_resource(Customers, '/customers')
+api.add_resource(Categories, '/categories')
+api.add_resource(CategoriesFilter, '/categories/<filter>')
 api.add_resource(Shippers, '/shippers')
-api.add_resource(ShippersSimilarName, '/shippers/<name>')
+api.add_resource(ShippersFilter, '/shippers/<filter>')
 
 if __name__ == '__main__':
-	app.run(port='5002')
+	app.run(host='localhost', port='5002')
