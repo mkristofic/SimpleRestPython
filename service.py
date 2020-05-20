@@ -11,8 +11,6 @@ mysqldb = mysql.connector.connect(
 )
 cursor = mysqldb.cursor()
 
-
-
 app = Flask(__name__)
 api = Api(app)
 
@@ -86,6 +84,72 @@ class Employees(Resource):
 		result = {'count': rows, 'employees': [{'EmployeeID': id, 'LastName': lname, 'FirstName': fname, 'Title': title, 'TitleOfCourtesy': toc, 'BirthDate': str(bdate), 'HireDate': str(hdate), 'Address': address, 'City': city, 'Region': region, 'PostalCode': pcode, 'Country': country, 'HomePhone': hphone, 'Extension': extension, 'Notes': notes} for (id, lname, fname, title, toc, bdate, hdate, address, city, region, pcode, country, hphone, extension, notes) in records]}
 		return result
 
+class OrderDetails(Resource):
+	def get(self):
+		parser = reqparse.RequestParser()
+		parser.add_argument('username', location='headers')
+		parser.add_argument('password', location='headers')
+		parser.add_argument('order')
+		parser.add_argument('product')
+		params = parser.parse_args()
+		if params['username'] is None or params['password'] is None:
+			response = jsonify({"error": "no username and/or password"})
+			response.status_code = 400
+			return response
+		if Auth.check(params['username'], params['password']) == False:
+			response = jsonify({"error": "user unauthorized"})
+			response.status_code = 401
+			return response
+		query = "select * from order_details"
+		query_clauses = []
+		if params['order'] is not None:
+			query_clauses.append(f"OrderID = '{params['order']}'")
+		if params['product'] is not None:
+			query_clauses.append(f"ProductID = '{params['product']}'")
+		if len(query_clauses) != 0:
+			query += " where " + " and ".join(query_clauses)
+		cursor.execute(query)
+		records = cursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'order_details': [{'OrderID': id, 'ProductID': pid, 'UnitPrice': f"{uprice:.2f}", 'Quantity': quan, 'Discount': str(disc)} for (id, pid, uprice, quan, disc) in records]}
+		return result
+
+class Orders(Resource):
+	def get(self):
+		parser = reqparse.RequestParser()
+		parser.add_argument('username', location='headers')
+		parser.add_argument('password', location='headers')
+		parser.add_argument('id')
+		parser.add_argument('customer')
+		parser.add_argument('city')
+		parser.add_argument('country')
+		params = parser.parse_args()
+		if params['username'] is None or params['password'] is None:
+			response = jsonify({"error": "no username and/or password"})
+			response.status_code = 400
+			return response
+		if Auth.check(params['username'], params['password']) == False:
+			response = jsonify({"error": "user unauthorized"})
+			response.status_code = 401
+			return response
+		query = "select OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry from orders"
+		query_clauses = []
+		if params['id'] is not None:
+			query_clauses.append(f"OrderID = '{params['id']}'")
+		if params['customer'] is not None:
+			query_clauses.append(f"CustomerID = '{params['customer']}'")
+		if params['city'] is not None:
+			query_clauses.append(f"ShipCity = '{params['city']}'")
+		if params['country'] is not None:
+			query_clauses.append(f"ShipCountry = '{params['country']}'")
+		if len(query_clauses) != 0:
+			query += " where " + " and ".join(query_clauses)
+		cursor.execute(query)
+		records = cursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'orders': [{'OrderID': id, 'CustomerID': customer, 'EmployeeID': employee, 'OrderDate': str(odate), 'RequiredDate': str(rdate), 'ShippedDate': str(sdate), 'ShipVia': via, 'Freight': str(freight), 'ShipName': name, 'ShippedDate': address, 'ShipCity': city, 'ShipRegion': region, 'ShipPostalCode': postal, 'ShipCountry': country} for (id, customer, employee, odate, rdate, sdate, via, freight, name, address, city, region, postal, country) in records]}
+		return result
+
 class Products(Resource):
 	def get(self):
 		cursor.execute("select * from products")
@@ -140,6 +204,8 @@ api.add_resource(Categories, '/categories')
 api.add_resource(Customers, '/customers')
 api.add_resource(Employees, '/employees')
 api.add_resource(CategoriesFilter, '/categories/<filter>')
+api.add_resource(OrderDetails, '/order_details')
+api.add_resource(Orders, '/orders')
 api.add_resource(Products, '/products')
 api.add_resource(Shippers, '/shippers')
 api.add_resource(ShippersFilter, '/shippers/<filter>')
