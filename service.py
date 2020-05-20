@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse
 import mysql.connector
+import hashlib
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -13,16 +14,27 @@ mycursor = mydb.cursor()
 app = Flask(__name__)
 api = Api(app)
 
+class Auth():
+	def check(username, password):
+		pass_hash = hashlib.sha256(str.encode(password)).hexdigest()
+		mycursor.execute(f"select * from users where username = '{username}' and password = '{pass_hash}'")
+		records = mycursor.fetchall()
+		return len(records) == 1
+
 class Categories(Resource):
 	def get(self):
 		mycursor.execute("select CategoryID, CategoryName, Description from categories")
-		result = {'categories': [{'CategoryID': id, 'CategoryName': name, 'Description': desc} for (id, name, desc) in mycursor.fetchall()]}
+		records = mycursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'categories': [{'CategoryID': id, 'CategoryName': name, 'Description': desc} for (id, name, desc) in records]}
 		return result
 
 class CategoriesFilter(Resource):
 	def get(self, filter):
-		mycursor.execute("select CategoryID, CategoryName, Description from categories where CategoryName like '%{}%' or Description like '%{}%'".format(filter, filter))
-		result = {'categories': [{'CategoryID': id, 'CategoryName': name, 'Description': desc} for (id, name, desc) in mycursor.fetchall()]}
+		mycursor.execute(f"select CategoryID, CategoryName, Description from categories where CategoryName like '%{filter}%' or Description like '%{filter}%'")
+		records = mycursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'categories': [{'CategoryID': id, 'CategoryName': name, 'Description': desc} for (id, name, desc) in records]}
 		return result
 
 class Customers(Resource):
@@ -36,30 +48,36 @@ class Customers(Resource):
 		query = "select CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone, Fax from customers"
 		query_clauses = []
 		if params['id'] is not None:
-			query_clauses.append("CustomerID = '{}'".format(params['id']))
+			query_clauses.append(f"CustomerID = '{params['id']}'")
 		if params['company'] is not None:
-			query_clauses.append("CompanyName = '{}'".format(params['company']))
+			query_clauses.append(f"CompanyName = '{params['company']}'")
 		if params['city'] is not None:
-			query_clauses.append("City = '{}'".format(params['city']))
+			query_clauses.append(f"City = '{params['city']}'")
 		if params['country'] is not None:
-			query_clauses.append("Country = '{}'".format(params['country']))
+			query_clauses.append(f"Country = '{params['country']}'")
 		if len(query_clauses) != 0:
 			query += " where " + " and ".join(query_clauses)
 		print(query)
 		mycursor.execute(query)
-		result = {'customers': [{'CustomerID': id, 'CompanyName': company, 'ContactName': contact_name, 'ContactTitle': contact_title, 'Address': address, 'City': city, 'Region': region, 'PostalCode': postal_code, 'Country': country, 'Phone': phone, 'Fax': fax} for (id, company, contact_name, contact_title, address, city, region, postal_code, country, phone, fax) in mycursor.fetchall()]}
+		records = mycursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'customers': [{'CustomerID': id, 'CompanyName': company, 'ContactName': contact_name, 'ContactTitle': contact_title, 'Address': address, 'City': city, 'Region': region, 'PostalCode': postal_code, 'Country': country, 'Phone': phone, 'Fax': fax} for (id, company, contact_name, contact_title, address, city, region, postal_code, country, phone, fax) in records]}
 		return result
 
 class Shippers(Resource):
 	def get(self):
 		mycursor.execute("select * from shippers")
-		result = {'shippers': [{'ShipperID': id, 'CompanyName': company, 'Phone': phone} for (id, company, phone) in mycursor.fetchall()]}
+		records = mycursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'shippers': [{'ShipperID': id, 'CompanyName': company, 'Phone': phone} for (id, company, phone) in records]}
 		return result
 
 class ShippersFilter(Resource):
 	def get(self, filter):
-		mycursor.execute("select * from shippers where LOWER(CompanyName) like '%{}%'".format(filter.lower()))
-		result = {'shippers': [{'ShipperID': id, 'CompanyName': company, 'Phone': phone} for (id, company, phone) in mycursor.fetchall()]}
+		mycursor.execute(f"select * from shippers where LOWER(CompanyName) like '%{filter.lower()}%'")
+		records = mycursor.fetchall()
+		rows = len(records)
+		result = {'count': rows, 'shippers': [{'ShipperID': id, 'CompanyName': company, 'Phone': phone} for (id, company, phone) in records]}
 		return result
 
 api.add_resource(Customers, '/customers')
