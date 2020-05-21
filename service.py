@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse
 import mysql.connector
 import hashlib
+import json
 
 mysqldb = mysql.connector.connect(
   host="localhost",
@@ -153,7 +154,70 @@ class Orders(Resource):
 
 class Products(Resource):
 	def get(self):
-		cursor.execute("select * from products")
+		parser = reqparse.RequestParser()
+		parser.add_argument('username', location='headers')
+		parser.add_argument('password', location='headers')
+		parser.add_argument('supplier', location='json')
+		parser.add_argument('category', location='json')
+		parser.add_argument('unit_price', location='json')
+		parser.add_argument('units_in_stock', location='json')
+		parser.add_argument('units_on_order', location='json')
+		parser.add_argument('reorder_level', location='json')
+		parser.add_argument('discontinued', location='json')
+		params = parser.parse_args()
+
+		if params['username'] is None or params['password'] is None:
+			response = jsonify({"error": "no username and/or password"})
+			response.status_code = 400
+			return response
+		if Auth.check(params['username'], params['password']) == False:
+			response = jsonify({"error": "user unauthorized"})
+			response.status_code = 401
+			return response
+
+		query = "select * from products"
+		query_clauses = []
+		unit_price = params['unit_price']
+		units_in_stock = params['units_in_stock']
+		units_on_order = params['units_on_order']
+		reorder_level = params['reorder_level']
+		if unit_price is not None:
+			unit_price = json.loads(unit_price.replace('\'', '"'))
+			if unit_price['gt'] is not None:
+				query_clauses.append(f"UnitPrice > {unit_price['gt']}")
+			if unit_price['lt'] is not None:
+				query_clauses.append(f"UnitPrice < {unit_price['lt']}")
+		if units_in_stock is not None:
+			units_in_stock = json.loads(units_in_stock.replace('\'', '"'))
+			if 'gt' in units_in_stock:
+				query_clauses.append(f"UnitsInStock > {units_in_stock['gt']}")
+			if 'lt' in units_in_stock:
+				query_clauses.append(f"UnitsInStock < {units_in_stock['lt']}")
+		if units_on_order is not None:
+			units_on_order = json.loads(units_on_order.replace('\'', '"'))
+			if 'gt' in units_on_order:
+				query_clauses.append(f"UnitsOnOrder > {units_on_order['gt']}")
+			if 'lt' in units_on_order:
+				query_clauses.append(f"UnitsOnOrder < {units_on_order['lt']}")
+		if reorder_level is not None:
+			reorder_level = json.loads(reorder_level.replace('\'', '"'))
+			if 'gt' in reorder_level:
+				query_clauses.append(f"ReorderLevel > {reorder_level['gt']}")
+			if 'lt' in reorder_level:
+				query_clauses.append(f"ReorderLevel < {reorder_level['lt']}")
+		if params['supplier'] is not None:
+			query_clauses.append(f"SupplierID = {params['supplier']}")
+		if params['category'] is not None:
+			query_clauses.append(f"CategoryID = {params['category']}")
+		if params['category'] is not None:
+			query_clauses.append(f"CategoryID = {params['category']}")
+		if params['discontinued'] is not None:
+			query_clauses.append(f"Discontinued = {params['discontinued']}")
+
+		if len(query_clauses) != 0:
+			query += " where " + " and ".join(query_clauses)
+
+		cursor.execute(query)
 		records = cursor.fetchall()
 		rows = len(records)
 		result = {'count': rows, 'products': [{'ProductID': id, 'ProductName': name, 'SupplierID': supplier, 'CategoryID': category, 'QuantityPerUnit': quan, 'UnitPrice': f"{uprice:.2f}", 'UnitsInStock': stock, 'UnitsOnOrder': order, 'ReorderLevel': reorder, 'Discontinued': disc == 1} for (id, name, supplier, category, quan, uprice, stock, order, reorder, disc) in records]}
@@ -201,6 +265,17 @@ class Suppliers(Resource):
 		result = {'count': rows, 'suppliers': [{'SupplierID': id, 'CompanyName': company, 'ContactName': contact_name, 'ContactTitle': contact_title, 'Address': address, 'City': city, 'Region': region, 'PostalCode': postal_code, 'Country': country, 'Phone': phone, 'Fax': fax, 'HomePage': homepage} for (id, company, contact_name, contact_title, address, city, region, postal_code, country, phone, fax, homepage) in records]}
 		return result
 
+class Reject(Resource):
+	def put(self):
+		response = jsonify({"error": "not supported"})
+		response.status_code = 405
+		return response
+
+	def delete(self):
+		response = jsonify({"error": "not supported"})
+		response.status_code = 405
+		return response
+
 api.add_resource(Categories, '/categories')
 api.add_resource(Customers, '/customers')
 api.add_resource(Employees, '/employees')
@@ -211,6 +286,7 @@ api.add_resource(Products, '/products')
 api.add_resource(Shippers, '/shippers')
 api.add_resource(ShippersFilter, '/shippers/<filter>')
 api.add_resource(Suppliers, '/suppliers')
+api.add_resource(Reject, '/')
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port='5002')
