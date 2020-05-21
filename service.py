@@ -289,4 +289,4 @@ api.add_resource(Suppliers, '/suppliers')
 api.add_resource(Reject, '/')
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port='5002')
+	app.run(host='0.0.0.0', port='80')
