@@ -265,6 +265,79 @@ class Suppliers(Resource):
 		result = {'count': rows, 'suppliers': [{'SupplierID': id, 'CompanyName': company, 'ContactName': contact_name, 'ContactTitle': contact_title, 'Address': address, 'City': city, 'Region': region, 'PostalCode': postal_code, 'Country': country, 'Phone': phone, 'Fax': fax, 'HomePage': homepage} for (id, company, contact_name, contact_title, address, city, region, postal_code, country, phone, fax, homepage) in records]}
 		return result
 
+	def post(self):
+		parser = reqparse.RequestParser()
+		parser.add_argument('username', location='headers')
+		parser.add_argument('password', location='headers')
+		parser.add_argument('newSupplier', location='json')
+		params = parser.parse_args()
+
+		if params['username'] is None or params['password'] is None:
+			response = jsonify({"error": "no username and/or password"})
+			response.status_code = 400
+			return response
+		if Auth.check(params['username'], params['password']) == False:
+			response = jsonify({"error": "user unauthorized"})
+			response.status_code = 401
+			return response
+
+		if params['newSupplier'] is None:
+			response = jsonify({"error": "no newSupplier attribute found"})
+			response.status_code = 400
+			return response
+
+		supplier = json.loads(params['newSupplier'].replace('\'', '"'))
+		if 'companyName' not in supplier:
+			response = jsonify({"error": "no required companyName attribute found"})
+			response.status_code = 400
+			return response
+
+		columns = [ 'CompanyName' ]
+		values = [ supplier['companyName'] ]
+
+		if 'contactName' in supplier:
+			columns.append('ContactName')
+			values.append(supplier['contactName'])
+		if 'contactTitle' in supplier:
+			columns.append('ContactTitle')
+			values.append(supplier['contactTitle'])
+		if 'address' in supplier:
+			columns.append('Address')
+			values.append(supplier['address'])
+		if 'city' in supplier:
+			columns.append('City')
+			values.append(supplier['city'])
+		if 'region' in supplier:
+			columns.append('Region')
+			values.append(supplier['region'])
+		if 'postalCode' in supplier:
+			columns.append('PostalCode')
+			values.append(supplier['postalCode'])
+		if 'country' in supplier:
+			columns.append('Country')
+			values.append(supplier['country'])
+		if 'phone' in supplier:
+			columns.append('Phone')
+			values.append(supplier['phone'])
+		if 'fax' in supplier:
+			columns.append('Fax')
+			values.append(supplier['fax'])
+		if 'homePage' in supplier:
+			columns.append('HomePage')
+			values.append(supplier['homePage'])
+		query = "insert into suppliers (" + ', '.join(columns) + ") VALUES (\"" + '", "'.join(values) + "\")"
+		cursor.execute(query)
+		mysqldb.commit()
+		rows = cursor.rowcount
+		if rows == 1:
+			response = jsonify({"ok": "supplier successfully inserted"})
+			response.status_code = 200
+			return response
+		else:
+			response = jsonify({"error": "supplier not inserted"})
+			response.status_code = 400
+			return response
+
 class Reject(Resource):
 	def put(self):
 		response = jsonify({"error": "not supported"})
