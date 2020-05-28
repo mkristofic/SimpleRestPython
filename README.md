@@ -40,7 +40,7 @@ There are operations for every table in the database and every table in the data
 `GET /categories` - all categories  
 `GET /categories/<filter>` - categories whose name or descriptions contains <filter> 
 
-Examples.
+Examples.  
 `35.242.214.64/categories`  
 `35.242.214.64/categories/sweet`  
 
@@ -50,7 +50,7 @@ Examples.
 
 Customers can be requested with additional query parameters. Those include: `id`, `company`, `city`, `country`.
 
-Examples.
+Examples.  
 `35.242.214.64/customers`  
 `35.242.214.64/customers?id=queen`  
 `35.242.214.64/customers?company=Cactus%20Comidas%20para%20llevar` - exact name of the company  
@@ -62,7 +62,7 @@ Examples.
 
 Employee requests require `username` and `password` as header parameters. The user with entered username/password must exist in the database.
 
-Example.
+Example.  
 `35.242.214.64/employees`
 
 ### Order details
@@ -72,7 +72,7 @@ Example.
 Order detail requests require `username` and `password` as header parameters. The user with entered username/password must exist in the database.
 Order details can be requested with additional query parameters. Those include: `order`, `product`.
 
-Examples.
+Examples.  
 `35.242.214.64/order_details`  
 `35.242.214.64/order_details?order=10500`  
 `35.242.214.64/order_details?product=39`  
@@ -85,7 +85,7 @@ Examples.
 Order requests require `username` and `password` as header parameters. The user with entered username/password must exist in the database.
 Orders without details can be requested with additional query parameters. Those include: `id`, `customer`, `city`, `country`.
 
-Examples.
+Examples.  
 `35.242.214.64/orders`  
 `35.242.214.64/orders/details`  
 `35.242.214.64/orders?id=10500`  
@@ -97,10 +97,11 @@ Examples.
 `GET /products` - all products
 
 Product requests require `username` and `password` as header parameters. The user with entered username/password must exist in the database.
+
 Products can be requested with aditional **JSON body parameters**. Those include: `supplier`, `category`, `unit_price`, `units_in_stock`, `units_on_order`, `reorder_level`, `discontinued`.
 Numeric parameters must be defined by using `gt` (greater than) and `lt` (less than) attributes.
 
-Examples.
+Examples.  
 `35.242.214.64/products` with or without the JSON body
 
 Body examples.
@@ -152,7 +153,7 @@ Body examples.
 `GET /shippers` - all shippers  
 `GET /shippers/<filter>` - shippers whose company name contains <filter>  
 
-Examples.
+Examples.  
 `35.242.214.64/shippers`  
 `35.242.214.64/shippers/speedy`  
 
@@ -180,14 +181,14 @@ Inserting a new supplier requires a **JSON body parameter** `newSupplier`. Attri
 | homePage ||
 
 
-Examples. / **GET**
+Examples. / **GET**  
 `35.242.214.64/suppliers`  
 `35.242.214.64/suppliers?id=20`  
 `35.242.214.64/suppliers?company=ltd` - company contains 'ltd'  
 `35.242.214.64/suppliers?city=manchester`  
 `35.242.214.64/suppliers?country=norway`  
 
-Example. / **POST**
+Example. / **POST**  
 `35.242.214.64/suppliers` **with** the JSON body
 
 Body examples.
