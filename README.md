@@ -259,7 +259,7 @@ Ovaj REST servis pokrenut je na GCP-u te mu se može pristupiti preko adrese [35
 
 ## Instalacija i pokretanje
 
-Za stvaranje bate podataka, korištene su spomenute preuzete naredbe, no baza podataka je nešto izmijenjena. Ime tablice 'order details' promijenilo se u 'order_details' te se stvorila jedna dodatna tablica 'users'. U toj se tablici čuvaju podaci o korisnicima - njihova korisnička imena te SHA256 sažetci lozinki.
+Za stvaranje bate podataka, korištene su spomenute preuzete naredbe, no baza podataka je nešto izmijenjena. Ime tablice 'order details' promijenjeno je u 'order_details' te se stvorila jedna dodatna tablica 'users'. U toj se tablici čuvaju podaci o korisnicima - njihova korisnička imena te SHA256 sažeci lozinki.
 
 ```sql
 alter table `order details` rename order_details;
@@ -270,31 +270,31 @@ create table users (
 
 U razvoju je korišten [pipenv]([https://github.com/pypa/pipenv](https://github.com/pypa/pipenv)). Popis ovisnosti može se pronaći u datoteci *Pipfile*.
 
-Initialize the environment and install the dependencies with:
+Inicijaliziranje *pipenv* okoline te instalacija ovisnosti:
 ```sh
 $ pipenv install
 ```
-Enter the environment with:
+Ulazak u okolinu:
 ```sh
 $ pipenv shell
 ```
 
-If not using *pipenv*, dependencies can be manually installed via *pip*.
+Ukoliko se ne koristi *pipenv*, ovisnosti se mogu ručno instalirati pomoću *pip*-a.
 
-Run the service with:
+Pokretanje servisa:
 ```sh
 $ python service.py
 ```
 
 ## Operacije i primjeri
-Postoje operacije za svaku tablicu u bazi podataka (osim za tablicu 'users') the svaka tablica ima svoju putanju na servisu. Slijedi opis dostupnih operacija.
+Postoje operacije za svaku tablicu u bazi podataka (osim za tablicu 'users') te svaka tablica ima svoju putanju na servisu. Slijedi opis dostupnih operacija.
 
 ### Katergorije
 
-`GET /categories` - sve kategorije
+`GET /categories` - sve kategorije  
 `GET /categories/<filter>` - kategorije čije ime ili opis sadrži riječ \<filter> 
 
-Primjeri.
+Primjeri.  
 `35.242.214.64/categories`  
 `35.242.214.64/categories/sweet`  
 
@@ -327,7 +327,7 @@ Zahtjevi za detaljima narudžbe zahtjevaju `username` and `password` *header* pa
 
 Zahtjev za detaljima narudžbe može sadržavati dodatne *query* parametre. Oni uključuju: `order`, `product`.
 
-Primjeri.
+Primjeri.  
 `35.242.214.64/order_details`  
 `35.242.214.64/order_details?order=10500`  
 `35.242.214.64/order_details?product=39`  
@@ -341,7 +341,7 @@ Zahtjevi za narudžbama zahtjevaju `username` and `password` *header* parametre.
 
 Zahtjev za narudžbama bez uključenih detalja može sadržavati dodatne *query* parametre. Oni uključuju: `id`, `customer`, `city`, `country`.
 
-Primjeri.
+Primjeri.  
 `35.242.214.64/orders`  
 `35.242.214.64/orders/details`  
 `35.242.214.64/orders?id=10500`  
@@ -357,7 +357,7 @@ Zahtjevi za proizvodima require `username` and `password` as header parameters. 
 Zahtjev za proizvodima može sadržavati dodatne **JSON body parametre**. Oni uključuju: `supplier`, `category`, `unit_price`, `units_in_stock`, `units_on_order`, `reorder_level`, `discontinued`.
 Brojevni parametri moraju se definitrati pomoću  `gt` (greater than) i `lt` (less than) atributa.
 
-Primjeri.
+Primjeri.  
 `35.242.214.64/products` sa ili bez JSON tijela
 
 Primjeri JSON tijela.
@@ -409,7 +409,7 @@ Primjeri JSON tijela.
 `GET /shippers` - svi otpremnici  
 `GET /shippers/<filter>` - otpremnici čiji naziv tvrtke sadržava riječ \<filter>  
 
-Primjeri.
+Primjeri.  
 `35.242.214.64/shippers`  
 `35.242.214.64/shippers/speedy`  
 
@@ -437,14 +437,14 @@ Unos novog dobavljača zahtjeva **JSON body parametar** `newSupplier`. Atributi 
 | homePage ||
 
 
-Primjeri. / **GET**
+Primjeri. / **GET**  
 `35.242.214.64/suppliers`  
 `35.242.214.64/suppliers?id=20`  
 `35.242.214.64/suppliers?company=ltd` - naziv tvrtke sadrži riječ 'ltd'  
 `35.242.214.64/suppliers?city=manchester`  
 `35.242.214.64/suppliers?country=norway`  
 
-Primjeri. / **POST**
+Primjeri. / **POST**  
 `35.242.214.64/suppliers` **sa** JSON tijelom
 
 Primjeri JSON tijela.
