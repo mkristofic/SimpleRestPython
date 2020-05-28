@@ -243,7 +243,7 @@ If the path exists, but the method is not implemented, response consists of a me
 
 If the path doesn't exist, the response is error code *404 NOT FOUND*.
 
-# ![Hrvatski](https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-croatia2x.png) Jedostavni REST servis u programskom jeziku Python
+# ![Hrvatski](https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-croatia2x.png) Jednostavni REST servis u programskom jeziku Python
 
 Ovo je jednostavni REST servis koji je napravljen kao projekt iz kolegija Elektroničko i mobilno poslovanje na Fakultetu organizacije i informatike u Varaždinu, Hrvatskoj.
 
