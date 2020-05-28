@@ -52,7 +52,13 @@ class Suppliers(Resource):
             response.status_code = 400
             return response
 
-        supplier = json.loads(params['newSupplier'].replace('\'', '"'))
+        try:
+            supplier = json.loads(params['newSupplier'].replace('\'', '"'))
+        except Exception as e:
+            response = jsonify({"error": "newSupplier must be an object"})
+            response.status_code = 400
+            return response
+
         if 'companyName' not in supplier:
             response = jsonify(
                 {"error": "no required companyName attribute found"})

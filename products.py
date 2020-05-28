@@ -36,9 +36,9 @@ class Products(Resource):
         reorder_level = params['reorder_level']
         if unit_price is not None:
             unit_price = json.loads(unit_price.replace('\'', '"'))
-            if unit_price['gt'] is not None:
+            if 'gt' in unit_price:
                 query_clauses.append(f"UnitPrice > {unit_price['gt']}")
-            if unit_price['lt'] is not None:
+            if 'lt' in unit_price:
                 query_clauses.append(f"UnitPrice < {unit_price['lt']}")
         if units_in_stock is not None:
             units_in_stock = json.loads(units_in_stock.replace('\'', '"'))

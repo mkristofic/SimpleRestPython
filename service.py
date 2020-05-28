@@ -9,7 +9,6 @@ from orders import Orders, OrdersAndDetails
 from products import Products
 from shippers import Shippers, ShippersFilter
 from suppliers import Suppliers
-from reject import Reject
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,7 +24,6 @@ api.add_resource(Products, '/products')
 api.add_resource(Shippers, '/shippers')
 api.add_resource(ShippersFilter, '/shippers/<filter>')
 api.add_resource(Suppliers, '/suppliers')
-api.add_resource(Reject, '/')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='80')
