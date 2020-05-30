@@ -289,7 +289,7 @@ $ python service.py
 ## Operacije i primjeri
 Postoje operacije za svaku tablicu u bazi podataka (osim za tablicu 'users') te svaka tablica ima svoju putanju na servisu. Slijedi opis dostupnih operacija.
 
-### Katergorije
+### Kategorije
 
 `GET /categories` - sve kategorije  
 `GET /categories/<filter>` - kategorije čije ime ili opis sadrži riječ \<filter> 

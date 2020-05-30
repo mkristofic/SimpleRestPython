@@ -14,7 +14,7 @@ class Shippers(Resource):
 
 class ShippersFilter(Resource):
     def get(self, filter):
-        c.cursor.execute(f"select * from shippers where LOWER(CompanyName) like '%{filter.lower()}%'")
+        c.cursor.execute(f"select * from shippers where CompanyName like '%{filter}%'")
         records = c.cursor.fetchall()
         rows = len(records)
         result = {'count': rows, 'shippers': [
