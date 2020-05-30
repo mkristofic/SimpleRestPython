@@ -40,11 +40,11 @@ Run the service with:
 $ python service.py
 ```
 
-## Operations and examples
+# Operations and examples
 
 There are operations for every table in the database (besides the 'users' table) and every table in the database roughly has its own path(s). In the following part explains these operations.
 
-### Categories
+## Categories
 
 `GET /categories` - all categories  
 `GET /categories/<filter>` - categories whose name or descriptions contains <filter> 
@@ -53,7 +53,7 @@ Examples.
 `35.242.214.64/categories`  
 `35.242.214.64/categories/sweet`  
 
-### Customers
+## Customers
 
 `GET /customers` - all customers
 
@@ -65,7 +65,7 @@ Examples.
 `35.242.214.64/customers?company=Cactus%20Comidas%20para%20llevar` - exact name of the company  
 `35.242.214.64/customers?country=germany&city=berlin`  
 
-### Employees
+## Employees
 
 `GET /employees` - all employees
 
@@ -74,7 +74,7 @@ Employee requests require `username` and `password` as header parameters. The us
 Example.  
 `35.242.214.64/employees`
 
-### Order details
+## Order details
 
 `GET /order_details` - all order details
 
@@ -87,7 +87,7 @@ Examples.
 `35.242.214.64/order_details?order=10500`  
 `35.242.214.64/order_details?product=39`  
 
-### Orders
+## Orders
 
 `GET /orders` - all orders  
 `GET /orders/details` - all orders with details embedded  
@@ -103,7 +103,7 @@ Examples.
 `35.242.214.64/orders?country=brazil`  
 `35.242.214.64/orders?city=berlin`  
 
-### Products
+## Products
 
 `GET /products` - all products
 
@@ -159,7 +159,7 @@ Body examples.
 }
 ```
 
-### Shippers
+## Shippers
 
 `GET /shippers` - all shippers  
 `GET /shippers/<filter>` - shippers whose company name contains <filter>  
@@ -168,7 +168,7 @@ Examples.
 `35.242.214.64/shippers`  
 `35.242.214.64/shippers/speedy`  
 
-### Suppliers
+## Suppliers
 
 `GET /suppliers` - all suppliers  
 `POST /suppliers` - insert a new supplier  
@@ -237,7 +237,7 @@ Body examples.
   }
 }
 ```
-### Other paths and methods
+## Other paths and methods
 
 If the path exists, but the method is not implemented, response consists of a message: "*The method is not allowed for the requested URL.*"
 
@@ -286,10 +286,10 @@ Pokretanje servisa:
 $ python service.py
 ```
 
-## Operacije i primjeri
+# Operacije i primjeri
 Postoje operacije za svaku tablicu u bazi podataka (osim za tablicu 'users') te svaka tablica ima svoju putanju na servisu. Slijedi opis dostupnih operacija.
 
-### Kategorije
+## Kategorije
 
 `GET /categories` - sve kategorije  
 `GET /categories/<filter>` - kategorije čije ime ili opis sadrži riječ \<filter> 
@@ -298,7 +298,7 @@ Primjeri.
 `35.242.214.64/categories`  
 `35.242.214.64/categories/sweet`  
 
-### Kupci / klijenti
+## Kupci / klijenti
 
 `GET /customers` - svi kupci
 
@@ -310,7 +310,7 @@ Primjeri.
 `35.242.214.64/customers?company=Cactus%20Comidas%20para%20llevar` - točno ime tvrtke  
 `35.242.214.64/customers?country=germany&city=berlin`  
 
-### Zaposlenici
+## Zaposlenici
 
 `GET /employees` - svi zaposlenici
 
@@ -319,7 +319,7 @@ Zahtjevi za zaposlenicima zahtjevaju `username` and `password` *header* parametr
 Primjer.
 `35.242.214.64/employees`
 
-### Detalji narudžbi
+## Detalji narudžbi
 
 `GET /order_details` - svi detalji narudžbi
 
@@ -332,7 +332,7 @@ Primjeri.
 `35.242.214.64/order_details?order=10500`  
 `35.242.214.64/order_details?product=39`  
 
-### Narudžbe
+## Narudžbe
 
 `GET /orders` - sve narudžbe  
 `GET /orders/details` - sve narudžbe s detaljima  
@@ -348,7 +348,7 @@ Primjeri.
 `35.242.214.64/orders?country=brazil`  
 `35.242.214.64/orders?city=berlin`  
 
-### Proizvodi
+## Proizvodi
 
 `GET /products` - svi proizvodi
 
@@ -404,7 +404,7 @@ Primjeri JSON tijela.
 }
 ```
 
-### Otpremnici
+## Otpremnici
 
 `GET /shippers` - svi otpremnici  
 `GET /shippers/<filter>` - otpremnici čiji naziv tvrtke sadržava riječ \<filter>  
@@ -413,7 +413,7 @@ Primjeri.
 `35.242.214.64/shippers`  
 `35.242.214.64/shippers/speedy`  
 
-### Dobavljači
+## Dobavljači
 
 `GET /suppliers` - svi dobavljači  
 `POST /suppliers` - unos novog dobavljača  
@@ -482,7 +482,7 @@ Primjeri JSON tijela.
   }
 }
 ```
-### Ostale putanje i metode
+## Ostale putanje i metode
 
 Ukoliko putanja postoji, no metoda nije implementirana, odgovor će sadržavati poruku: "*The method is not allowed for the requested URL.*"
 
