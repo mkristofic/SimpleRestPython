@@ -175,7 +175,7 @@ Examples.
 
 Suppliers can be requested with additional query parameters. Those include: `id`, `company`, `city`, `country`.
 
-Inserting a new supplier requires a **JSON body parameter** `newSupplier`. Attributes of the `newSupplier` value are shown in a table below.
+Inserting a new supplier requires a **JSON body parameter** `newSupplier` and `username` and `password` as header parameters. Attributes of the `newSupplier` value are shown in a table below.
 
 | Attribute|Required|
 |----------:|:-------------:|
@@ -314,7 +314,7 @@ Primjeri.
 
 `GET /employees` - svi zaposlenici
 
-Zahtjevi za zaposlenicima zahtjevaju `username` and `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
+Zahtjevi za zaposlenicima zahtjevaju `username` i `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
 
 Primjer.
 `35.242.214.64/employees`
@@ -323,7 +323,7 @@ Primjer.
 
 `GET /order_details` - svi detalji narudžbi
 
-Zahtjevi za detaljima narudžbe zahtjevaju `username` and `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
+Zahtjevi za detaljima narudžbe zahtjevaju `username` i `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
 
 Zahtjev za detaljima narudžbe može sadržavati dodatne *query* parametre. Oni uključuju: `order`, `product`.
 
@@ -337,7 +337,7 @@ Primjeri.
 `GET /orders` - sve narudžbe  
 `GET /orders/details` - sve narudžbe s detaljima  
 
-Zahtjevi za narudžbama zahtjevaju `username` and `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
+Zahtjevi za narudžbama zahtjevaju `username` i `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
 
 Zahtjev za narudžbama bez uključenih detalja može sadržavati dodatne *query* parametre. Oni uključuju: `id`, `customer`, `city`, `country`.
 
@@ -352,7 +352,7 @@ Primjeri.
 
 `GET /products` - svi proizvodi
 
-Zahtjevi za proizvodima require `username` and `password` as header parameters. The user with entered username/password must exist in the database.
+Zahtjevi za proizvodima zahtjevaju `username` i `password` *header* parametre. Uneseni korisnik mora postojati u bazi podataka.
 
 Zahtjev za proizvodima može sadržavati dodatne **JSON body parametre**. Oni uključuju: `supplier`, `category`, `unit_price`, `units_in_stock`, `units_on_order`, `reorder_level`, `discontinued`.
 Brojevni parametri moraju se definitrati pomoću  `gt` (greater than) i `lt` (less than) atributa.
@@ -420,7 +420,7 @@ Primjeri.
 
 Zahtjev za dobavljačima može sadržavati dodatne *query* parametre. Oni uključuju: `id`, `company`, `city`, `country`.
 
-Unos novog dobavljača zahtjeva **JSON body parametar** `newSupplier`. Atributi vrijednosti `newSupplier` prikazani su u tablici ispod.
+Unos novog dobavljača zahtjeva **JSON body parametar** `newSupplier` te `username` i `password` *header* parametre. Atributi vrijednosti `newSupplier` prikazani su u tablici ispod.
 
 | Atribut|Obavezan|
 |----------:|:-------------:|
